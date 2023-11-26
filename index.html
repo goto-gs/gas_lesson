@@ -9,6 +9,27 @@
 </head>
 
 <body>
+    <h1 class="main_title">投稿掲示板</h1>
+    <!-- formのsubmitボタンをクリックするとSpreadSheetにデータを追加する -->
+    <form method="post" id="gasLessonForm">
+        <div class=" form_item">
+            <label for="user_name">名前</label>
+            <input type="text" name="user_name" id="user_name">
+        </div>
+
+        <div class="form_item">
+            <label for="user_image">画像</label>
+            <input type="file" name="user_image" id="user_image">
+        </div>
+
+        <div class="form_item">
+            <label for="post">文章</label>
+            <textarea name="post" id="post" cols="30" rows="10"></textarea>
+        </div>
+
+        <input type="button" value="投稿する" onclick="submitData()" id="submit">
+    </form>
+
     <!-- SpreadSheetから取得した投稿データを表示する -->
     <div id="gasLessonData"></div>
 

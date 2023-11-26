@@ -42,11 +42,62 @@ function displayData(data) {
         // user_nameの左側にuser_imageを画像として表示。画像のサイズは50px
         // user_nameの下にpostの内容を表示
         // id,user_idは表示しない。
-        gasLessonData.innerHTML += "<div id='" + data[i].id + "'>" +
-            "<img src='" + data[i].user_image + "' width='50px'>" +
-            "<p>" + data[i].user_name + "</p>" +
-            "<p>" + data[i].post + "</p>" +
+        gasLessonData.innerHTML += "<div class='post_box' id='" + data[i].id + "'>" +
+            "<img class='user_image' src='" + data[i].user_image + "' width='50px'>" +
+            "<p class='user_name'>" + data[i].user_name + "</p>" +
+            "<p class='post'>" + data[i].post + "</p>" +
             "</div>";
 
     }
+}
+
+// formの送信ボタンを押した時の処理
+// フォームのデータを取得し、GoogleSpreadSheetにデータを送信する関数
+function submitData() {
+    // フォームの内容を取得
+    // post,user_nameはテキストボックスの値を取得
+    // user_imageは画像データをJSON形式で送れるようにBASE64形式に変換する
+    const post = document.getElementById("post").value;
+    const user_name = document.getElementById("user_name").value;
+    const user_image = document.getElementById("user_image").files[0];
+
+    const sendData = {
+        "post": post,
+        "user_name": user_name
+    }
+
+    // user_imageの画像データをBASE64形式に変換しsendDataオブジェクトに追加する
+    const reader = new FileReader();
+    reader.onload = function () {
+        // console.log(reader.result);
+        sendData.user_image = reader.result;
+
+        // リクエストURL
+        const requestURL = "https://script.google.com/macros/s/AKfycbzQb8dLOwkHNWzZpkQkJ3YRIF-okuOvFk_w_ztgPU2vYh7_oHHUom4O3iULrYkHx5Y/exec";
+        // リクエストパラメータ
+        const requestParam = {
+            "method": "POST",
+            "mode": "no-cors",
+            "headers": {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            "body": JSON.stringify(sendData)
+        };
+
+        console.log(requestParam);
+
+        // リクエスト実行後にページをリロード
+        fetch(requestURL, requestParam)
+            .then(response => {
+                console.log(response);
+                location.reload();
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    };
+
+    reader.readAsDataURL(user_image);
+
+
 }
